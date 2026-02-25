@@ -22,14 +22,14 @@
     },
     {
       title: "BASE PAIRING PROBABILITY MODEL",
-      description: "Finding alternatives to noisy experimentally determined icSHAPE data by utilizing RNA base pairing probabilities.",
+      description: "Finding alternatives to noisy experimental icSHAPE data by utilizing RNA base pairing probabilities.",
       tags: ["#BIOINFORMATICS", "#MATH", "#TS"],
       link: "#",
     },
     {
       title: "BARNYARD",
-      description: "Custom-built homelab environment for decentralized agricultural monitoring and localized cloud computing.",
-      tags: ["#IOT", "#SELFHOSTED", "#SVELTE"],
+      description: "Custom-built k3s homelab optimized for media streaming, high-availability file storage, and localized machine learning workloads.",
+      tags: ["#K3S", "#SELFHOSTED", "#ML"],
       link: "#",
     }
   ];
@@ -203,24 +203,58 @@
 
 
 <section class="hobbies">
+
+
+
   <h2 class="section-header">OFF THE CLOCK</h2>
+
+
+
   <div class="grid grid-2">
+
+
+
     <div class="interactive-zone">
-      <h3 class="hobby-title">ANALOG PHOTOGRAPHY</h3>
-      <p>
-        Capturing the stark architecture of San Jose using 35mm film. High
-        contrast, no filters.
-      </p>
+
+
+
+      <h3 class="hobby-title">GUITAR</h3>
+
+
+
+      <p>Exploring complex arrangements and soundscapes. Always searching for the perfect tone.</p>
+
+
+
     </div>
+
+
+
     <div class="interactive-zone">
-      <h3 class="hobby-title">MECHANICAL KEYBOARDS</h3>
-      <p>
-        Building tactile interfaces for maximum efficiency. Current daily
-        driver: 40% ortholinear.
-      </p>
+
+
+
+      <h3 class="hobby-title">OVERWATCH</h3>
+
+
+
+      <p>Tracer main. Specializing in high-mobility disruption and precise pulse bomb delivery.</p>
+
+
+
     </div>
+
+
+
   </div>
+
+
+
 </section>
+
+
+
+
 
 <section class="ascii-art-container">
   <pre class="ascii-art">
