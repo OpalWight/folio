@@ -69,18 +69,21 @@
 
   function getVisualWidth(str: string) {
     let width = 0;
-    for (let i = 0; i < str.length; i++) {
-      // Check if character is CJK (Full-width)
-      if (str.charCodeAt(i) >= 0x1100 && (
-          (str.charCodeAt(i) <= 0x115f) ||
-          (str.charCodeAt(i) >= 0x2e80 && str.charCodeAt(i) <= 0xa4cf) ||
-          (str.charCodeAt(i) >= 0xac00 && str.charCodeAt(i) <= 0xd7a3) ||
-          (str.charCodeAt(i) >= 0xf900 && str.charCodeAt(i) <= 0xfaff) ||
-          (str.charCodeAt(i) >= 0xfe10 && str.charCodeAt(i) <= 0xfe19) ||
-          (str.charCodeAt(i) >= 0xfe30 && str.charCodeAt(i) <= 0xfe6f) ||
-          (str.charCodeAt(i) >= 0xff00 && str.charCodeAt(i) <= 0xff60) ||
-          (str.charCodeAt(i) >= 0xffe0 && str.charCodeAt(i) <= 0xffe6)
-      )) {
+    for (const char of str) {
+      const code = char.charCodeAt(0);
+      // More comprehensive CJK and full-width ranges
+      if (
+        (code >= 0x1100 && code <= 0x115f) || // Hangul Jamo
+        (code >= 0x2e80 && code <= 0xa4cf && code !== 0x303f) || // CJK Radicals Supplement .. CJK Compatibility Ideographs
+        (code >= 0xac00 && code <= 0xd7a3) || // Hangul Syllables
+        (code >= 0xf900 && code <= 0xfaff) || // CJK Compatibility Ideographs
+        (code >= 0xfe10 && code <= 0xfe19) || // Vertical forms
+        (code >= 0xfe30 && code <= 0xfe6f) || // CJK Compatibility Forms
+        (code >= 0xff00 && code <= 0xff60) || // Fullwidth Forms
+        (code >= 0xffe0 && code <= 0xffe6) || // Fullwidth Forms
+        (code >= 0x20000 && code <= 0x2fffd) || // CJK Unified Ideographs Extension B-D
+        (code >= 0x30000 && code <= 0x3fffd)    // CJK Unified Ideographs Extension E-F
+      ) {
         width += 2;
       } else {
         width += 1;
@@ -92,22 +95,26 @@
   function truncate(str: string, len: number) {
     if (!str) return ' '.repeat(len);
     
-    let currentWidth = 0;
-    let result = '';
+    const totalWidth = getVisualWidth(str);
+    if (totalWidth <= len) {
+      return str + ' '.repeat(len - totalWidth);
+    }
     
-    for (let i = 0; i < str.length; i++) {
-      const char = str[i];
+    let result = '';
+    let currentWidth = 0;
+    const limit = len - 3;
+    
+    for (const char of str) {
       const charWidth = getVisualWidth(char);
-      
-      if (currentWidth + charWidth > len - 3 && i < str.length - 1) {
-        result += '...';
-        currentWidth += 3;
+      if (currentWidth + charWidth > limit) {
         break;
       }
-      
       result += char;
       currentWidth += charWidth;
     }
+    
+    result += '...';
+    currentWidth += 3;
     
     return result + ' '.repeat(Math.max(0, len - currentWidth));
   }
