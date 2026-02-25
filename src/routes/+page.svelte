@@ -97,7 +97,10 @@
     
     const totalWidth = getVisualWidth(str);
     if (totalWidth <= len) {
-      return str + ' '.repeat(len - totalWidth);
+      const remaining = len - totalWidth;
+      const fullWidthSpaces = Math.floor(remaining / 2);
+      const halfWidthSpaces = remaining % 2;
+      return str + '\u3000'.repeat(fullWidthSpaces) + ' '.repeat(halfWidthSpaces);
     }
     
     let result = '';
@@ -116,7 +119,12 @@
     result += '...';
     currentWidth += 3;
     
-    return result + ' '.repeat(Math.max(0, len - currentWidth));
+    // Fill the remaining visual space
+    const remaining = len - currentWidth;
+    const fullWidthSpaces = Math.floor(remaining / 2);
+    const halfWidthSpaces = remaining % 2;
+    
+    return result + '\u3000'.repeat(fullWidthSpaces) + ' '.repeat(halfWidthSpaces);
   }
 
   function formatTime(ms: number) {
