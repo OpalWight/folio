@@ -261,19 +261,19 @@
 
 
 
-    <div class="interactive-zone">
+        <div class="interactive-zone">
 
 
 
-      <h3 class="hobby-title">GUITAR</h3>
+          <h3 class="hobby-title">GUITAR</h3>
 
 
 
-      <p>Exploring complex arrangements and soundscapes. Always searching for the perfect tone.</p>
+          <p>still very much a noob, but I enjoy learning to play and sing along to wtv song I'm listening to at the time!</p>
 
 
 
-    </div>
+        </div>
 
 
 
