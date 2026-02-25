@@ -230,19 +230,23 @@
 
 
 
-    <div class="interactive-zone">
+        <div class="interactive-zone">
 
 
 
-      <h3 class="hobby-title">OVERWATCH</h3>
+          <h3 class="hobby-title">OVERWATCH</h3>
 
 
 
-      <p>Tracer main. Specializing in high-mobility disruption and precise pulse bomb delivery.</p>
+          <p>Tracer main. Need a duo, hmu @opalwight on steam.</p>
 
 
 
-    </div>
+        </div>
+
+
+
+    
 
 
 
