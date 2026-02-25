@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --bg-color: #F4F4F4;
+  --text-color: #000000;
+  --container-bg: #FFFFFF;
+  --input-bg: #E0E0E0;
+  --accent-color: #0000FF;
+  --border-width: 2px;
+  --spacing: 2rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Space Mono', 'Courier New', Courier, monospace;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 0;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  border-radius: 0;
+}
+
+/* Custom Checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: var(--border-width) solid var(--text-color);
+  background-color: var(--input-bg);
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--accent-color);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "X";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Newspaper Column Layout */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-column {
+  width: 100%;
+  max-width: 1000px;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  margin-top: 4rem;
+}
+
+/* Horizontal Banding Refinement */
+section {
+  border-bottom: var(--border-width) solid var(--text-color);
+  padding: 4rem 2rem;
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bold-italic {
+  font-weight: 700;
+  font-style: italic;
+}
+
+.digital-blue-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.interactive-zone {
+  background-color: var(--bg-color);
+  padding: var(--spacing);
+  border: var(--border-width) solid var(--text-color);
+}

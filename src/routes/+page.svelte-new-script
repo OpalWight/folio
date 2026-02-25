@@ -1,0 +1,55 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+
+  const projects = [
+    {
+      title: "CAREFLOW",
+      description: "End-to-end healthcare workflow optimization platform for modern clinics.",
+      tags: ["#REACT", "#NODEJS", "#SQL"],
+      link: "#",
+    },
+    {
+      title: "NEUROTECH",
+      description: "Brain-computer interface visualization suite for real-time neural data analysis.",
+      tags: ["#PYTHON", "#C++", "#WASM"],
+      link: "#",
+    },
+    {
+      title: "CYCLONE",
+      description: "High-performance distributed systems orchestrator for massive scale computing.",
+      tags: ["#GO", "#RUST", "#GRPC"],
+      link: "#",
+    },
+    {
+      title: "BASE PAIRING PROBABILITY MODEL",
+      description: "Stochastic modeling of RNA secondary structures and folding dynamics.",
+      tags: ["#BIOINFORMATICS", "#MATH", "#TS"],
+      link: "#",
+    },
+    {
+      title: "BARNYARD",
+      description: "Decentralized agricultural asset management and IoT monitoring system.",
+      tags: ["#IOT", "#SOLIDITY", "#SVELTE"],
+      link: "#",
+    }
+  ];
+
+  let spotifyData = $state({ title: 'LOADING...', artist: 'SPOTIFY', isPlaying: false });
+
+  onMount(async () => {
+    try {
+      const res = await fetch('/api/spotify');
+      const data = await res.json();
+      if (data.title) {
+        spotifyData = data;
+      }
+    } catch (e) {
+      spotifyData = { title: 'OFFLINE', artist: 'IPOD', isPlaying: false };
+    }
+  });
+
+  function truncate(str: string, len: number) {
+    if (!str) return ' '.repeat(len);
+    return str.length > len ? str.substring(0, len - 3) + '...' : str.padEnd(len, ' ');
+  }
+</script>
