@@ -11,7 +11,7 @@
     {
       title: "NEUROTECH",
       description: "Brain-computer interface visualization suite for real-time neural data analysis.",
-      tags: ["#PYTHON", "#C++", "#WASM"],
+      tags: ["#PYTHON"],
       link: "#",
     },
     {
@@ -23,13 +23,13 @@
     {
       title: "BASE PAIRING PROBABILITY MODEL",
       description: "Finding alternatives to noisy experimental icSHAPE data by utilizing RNA base pairing probabilities.",
-      tags: ["#BIOINFORMATICS", "#MATH", "#TS"],
+      tags: ["#BIOINFORMATICS", "#TENSORFLOW"],
       link: "#",
     },
     {
       title: "BARNYARD",
       description: "Custom-built k3s homelab optimized for media streaming, high-availability file storage, and localized machine learning workloads.",
-      tags: ["#K3S", "#SELFHOSTED", "#ML"],
+      tags: ["#LINUX", "#KUBERNETES"],
       link: "#",
     }
   ];
