@@ -4,7 +4,7 @@
   const projects = [
     {
       title: "CAREFLOW",
-      description: "Revolutionizing the nursing assistant education pipeline through streamlined digital workflows and training modules.",
+      description: "Revolutionizing nursing assistant education through immersive patient simulations and personalized quizzes.",
       tags: ["#REACT", "#NODEJS", "#SQL"],
       link: "#",
     },
@@ -120,17 +120,27 @@
 
   <div class="grid grid-2">
 
-    <div>
+        <div>
 
-      <p class="bold-italic">Albert Vo is a software engineer specializing in architecting systems from the metal to the browser.</p>
+          <p class="bold-italic">I am a software engineer specializing in architecting systems from the metal to the browser.</p>
 
-    </div>
+        </div>
 
-    <div>
+    
 
-      <p>Technically established in 2006 (my birth year), I have dedicated my entire existence to building robust, scalable, and utilitarian digital infrastructure. I believe in the power of simplicity, the efficiency of monospaced fonts, and the necessity of end-to-end ownership in software development.</p>
+                    <div>
 
-    </div>
+                      <p>A pre-med student turned software engineer, I bridge the gap between clinical empathy and technical complexity. I'm dedicated to end-to-end ownership and building robust, scalable systems that prioritize human-centric impact.</p>
+
+                    </div>
+
+                
+
+            
+
+        
+
+    
 
   </div>
 
@@ -252,9 +262,9 @@
       <p>&copy; 2026 ALBERT VO</p>
     </div>
     <div class="footer-links">
-      <a href="https://github.com">GITHUB</a>
-      <a href="https://linkedin.com">LINKEDIN</a>
-      <a href="mailto:albert@vo.dev">CONTACT</a>
+      <a href="https://github.com/OpalWight">GITHUB</a>
+      <a href="https://www.linkedin.com/in/albert-vo-0552372b1/">LINKEDIN</a>
+      <a href="mailto:atrvo@ucdavis.edu">CONTACT</a>
     </div>
   </div>
 </section>
