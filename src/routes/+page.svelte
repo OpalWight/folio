@@ -67,9 +67,49 @@
     };
   });
 
+  function getVisualWidth(str: string) {
+    let width = 0;
+    for (let i = 0; i < str.length; i++) {
+      // Check if character is CJK (Full-width)
+      if (str.charCodeAt(i) >= 0x1100 && (
+          (str.charCodeAt(i) <= 0x115f) ||
+          (str.charCodeAt(i) >= 0x2e80 && str.charCodeAt(i) <= 0xa4cf) ||
+          (str.charCodeAt(i) >= 0xac00 && str.charCodeAt(i) <= 0xd7a3) ||
+          (str.charCodeAt(i) >= 0xf900 && str.charCodeAt(i) <= 0xfaff) ||
+          (str.charCodeAt(i) >= 0xfe10 && str.charCodeAt(i) <= 0xfe19) ||
+          (str.charCodeAt(i) >= 0xfe30 && str.charCodeAt(i) <= 0xfe6f) ||
+          (str.charCodeAt(i) >= 0xff00 && str.charCodeAt(i) <= 0xff60) ||
+          (str.charCodeAt(i) >= 0xffe0 && str.charCodeAt(i) <= 0xffe6)
+      )) {
+        width += 2;
+      } else {
+        width += 1;
+      }
+    }
+    return width;
+  }
+
   function truncate(str: string, len: number) {
     if (!str) return ' '.repeat(len);
-    return str.length > len ? str.substring(0, len - 3) + '...' : str.padEnd(len, ' ');
+    
+    let currentWidth = 0;
+    let result = '';
+    
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      const charWidth = getVisualWidth(char);
+      
+      if (currentWidth + charWidth > len - 3 && i < str.length - 1) {
+        result += '...';
+        currentWidth += 3;
+        break;
+      }
+      
+      result += char;
+      currentWidth += charWidth;
+    }
+    
+    return result + ' '.repeat(Math.max(0, len - currentWidth));
   }
 
   function formatTime(ms: number) {
