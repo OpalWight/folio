@@ -11,22 +11,64 @@
   });
 
   let displayTitle = $state("LOADING...");
+  let displayArtist = $state("SPOTIFY");
   let lastTitle = "";
+  let lastArtist = "";
+  let slotIntervalTitle: ReturnType<typeof setInterval> | null = null;
+  let slotIntervalArtist: ReturnType<typeof setInterval> | null = null;
+
+  const LATIN_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&";
+  const CJK_START = 0x4e00;
+  const CJK_END = 0x9fff;
+  const HANGUL_START = 0xac00;
+  const HANGUL_END = 0xd7af;
+  const KANA_START = 0x3040;
+  const KANA_END = 0x30ff;
+
+  function isCJK(ch: string) {
+    const code = ch.codePointAt(0)!;
+    return (code >= CJK_START && code <= CJK_END) ||
+           (code >= HANGUL_START && code <= HANGUL_END) ||
+           (code >= KANA_START && code <= KANA_END);
+  }
+
+  function randomCharFor(ch: string) {
+    const code = ch.codePointAt(0)!;
+    if (code >= CJK_START && code <= CJK_END)
+      return String.fromCodePoint(CJK_START + Math.floor(Math.random() * (CJK_END - CJK_START)));
+    if (code >= HANGUL_START && code <= HANGUL_END)
+      return String.fromCodePoint(HANGUL_START + Math.floor(Math.random() * (HANGUL_END - HANGUL_START)));
+    if (code >= KANA_START && code <= KANA_END)
+      return String.fromCodePoint(KANA_START + Math.floor(Math.random() * (KANA_END - KANA_START)));
+    return LATIN_CHARS[Math.floor(Math.random() * LATIN_CHARS.length)];
+  }
 
   $effect(() => {
     const newTitle = spotifyData.title;
-    if (newTitle && newTitle !== lastTitle) {
+    if (newTitle && newTitle !== lastTitle && newTitle !== "LOADING...") {
       lastTitle = newTitle;
-      animateSlotMachine(newTitle);
+      slotIntervalTitle = animateSlotMachine(newTitle, slotIntervalTitle, (v) => displayTitle = v);
     }
   });
 
-  function animateSlotMachine(target: string) {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&";
+  $effect(() => {
+    const newArtist = spotifyData.artist;
+    if (newArtist && newArtist !== lastArtist && newArtist !== "SPOTIFY") {
+      lastArtist = newArtist;
+      slotIntervalArtist = animateSlotMachine(newArtist, slotIntervalArtist, (v) => displayArtist = v);
+    }
+  });
+
+  function animateSlotMachine(
+    target: string,
+    prevInterval: ReturnType<typeof setInterval> | null,
+    setter: (v: string) => void,
+  ) {
+    if (prevInterval) clearInterval(prevInterval);
     const len = target.length;
     let resolved = 0;
 
-    const interval = setInterval(() => {
+    const id = setInterval(() => {
       let result = "";
       for (let i = 0; i < len; i++) {
         if (i < resolved) {
@@ -34,17 +76,18 @@
         } else if (target[i] === " ") {
           result += " ";
         } else {
-          result += chars[Math.floor(Math.random() * chars.length)];
+          result += randomCharFor(target[i]);
         }
       }
-      displayTitle = result;
+      setter(result);
 
       resolved++;
       if (resolved > len) {
-        clearInterval(interval);
-        displayTitle = target;
+        clearInterval(id);
+        setter(target);
       }
     }, 80);
+    return id;
   }
 
   onMount(async () => {
@@ -119,7 +162,7 @@
       <div class="spotify-display">
         <p class="spotify-label">{spotifyData.isPlaying ? "WHAT I'M LISTENING TO:" : "LAST PLAYED:"}</p>
         <p class="spotify-title">{displayTitle}</p>
-        <p class="spotify-artist">{spotifyData.artist}</p>
+        <p class="spotify-artist">{displayArtist}</p>
         <p class="spotify-bar">{getProgressBar(spotifyData.progress_ms, spotifyData.duration_ms, 20)}</p>
         <p class="spotify-time">
           <span>{formatTime(spotifyData.progress_ms)}</span>
@@ -135,8 +178,7 @@
   <h2 class="section-header">ABOUT ME</h2>
 
   <p>
-    <strong>I am a software engineer specializing in architecting systems from the
-    metal to the browser.</strong>
+    <strong>I build software that connects people.</strong>
   </p>
 
   <p>

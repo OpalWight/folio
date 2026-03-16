@@ -48,7 +48,7 @@ export const projects: Project[] = [
     year: "2025",
     slug: "song-hit-predictor",
     description:
-      "macOS application leveraging advanced ML (Demucs, Whisper) for real-time vocal training, source separation, and high-precision pitch tracking.",
+      "Gradient boost model for predicting song popularity based on audio features. Frontend built with Svelte, backend with Flask.",
     tags: [],
     link: "/projects/song-hit-predictor",
     github: "",
