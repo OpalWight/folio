@@ -10,6 +10,43 @@
     duration_ms: 0,
   });
 
+  let displayTitle = $state("LOADING...");
+  let lastTitle = "";
+
+  $effect(() => {
+    const newTitle = spotifyData.title;
+    if (newTitle && newTitle !== lastTitle) {
+      lastTitle = newTitle;
+      animateSlotMachine(newTitle);
+    }
+  });
+
+  function animateSlotMachine(target: string) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&";
+    const len = target.length;
+    let resolved = 0;
+
+    const interval = setInterval(() => {
+      let result = "";
+      for (let i = 0; i < len; i++) {
+        if (i < resolved) {
+          result += target[i];
+        } else if (target[i] === " ") {
+          result += " ";
+        } else {
+          result += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+      displayTitle = result;
+
+      resolved++;
+      if (resolved > len) {
+        clearInterval(interval);
+        displayTitle = target;
+      }
+    }, 80);
+  }
+
   onMount(async () => {
     async function updateSpotify() {
       try {
@@ -21,7 +58,7 @@
       } catch (e) {
         spotifyData = {
           title: "OFFLINE",
-          artist: "IPOD",
+          artist: "---",
           isPlaying: false,
           progress_ms: 0,
           duration_ms: 0,
@@ -31,10 +68,8 @@
 
     updateSpotify();
 
-    // Sync with Spotify every 10 seconds
     const syncInterval = setInterval(updateSpotify, 10000);
 
-    // Local ticker to update the time every second
     const tickerInterval = setInterval(() => {
       if (
         spotifyData.isPlaying &&
@@ -50,58 +85,6 @@
     };
   });
 
-  function getVisualWidth(str: string) {
-    let width = 0;
-    for (const char of str) {
-      const code = char.charCodeAt(0);
-      // More comprehensive CJK and full-width ranges
-      if (
-        (code >= 0x1100 && code <= 0x115f) || // Hangul Jamo
-        (code >= 0x2e80 && code <= 0xa4cf && code !== 0x303f) || // CJK Radicals Supplement .. CJK Compatibility Ideographs
-        (code >= 0xac00 && code <= 0xd7a3) || // Hangul Syllables
-        (code >= 0xf900 && code <= 0xfaff) || // CJK Compatibility Ideographs
-        (code >= 0xfe10 && code <= 0xfe19) || // Vertical forms
-        (code >= 0xfe30 && code <= 0xfe6f) || // CJK Compatibility Forms
-        (code >= 0xff00 && code <= 0xff60) || // Fullwidth Forms
-        (code >= 0xffe0 && code <= 0xffe6) || // Fullwidth Forms
-        (code >= 0x20000 && code <= 0x2fffd) || // CJK Unified Ideographs Extension B-D
-        (code >= 0x30000 && code <= 0x3fffd) // CJK Unified Ideographs Extension E-F
-      ) {
-        width += 2;
-      } else {
-        width += 1;
-      }
-    }
-    return width;
-  }
-
-  function truncate(str: string, len: number) {
-    if (!str) return " ".repeat(len);
-
-    const totalWidth = getVisualWidth(str);
-    if (totalWidth <= len) {
-      return str + " ".repeat(len - totalWidth);
-    }
-
-    let result = "";
-    let currentWidth = 0;
-    const limit = len - 3;
-
-    for (const char of str) {
-      const charWidth = getVisualWidth(char);
-      if (currentWidth + charWidth > limit) {
-        break;
-      }
-      result += char;
-      currentWidth += charWidth;
-    }
-
-    result += "...";
-    currentWidth += 3;
-
-    return result + " ".repeat(Math.max(0, len - currentWidth));
-  }
-
   function formatTime(ms: number) {
     if (!ms) return "00:00";
     const seconds = Math.floor((ms / 1000) % 60);
@@ -113,15 +96,7 @@
     if (!duration) return "-".repeat(width);
     const percent = Math.min(progress / duration, 1);
     const filled = Math.round(width * percent);
-    return "#".repeat(filled) + "-".repeat(width - filled);
-  }
-
-  function getPlaybackStatus(progress: number, duration: number, len: number) {
-    if (!duration) return " ".repeat(len);
-    const current = formatTime(progress);
-    const total = formatTime(duration);
-    const spaces = len - current.length - total.length;
-    return current + " ".repeat(Math.max(0, spaces)) + total;
+    return "\u2588".repeat(filled) + "-".repeat(width - filled);
   }
 </script>
 
@@ -129,19 +104,33 @@
   <title>ALBERT VO | END TO END SOLUTIONS</title>
 </svelte:head>
 
-<section class="hero-top-border"></section>
-<section class="hero">
-  <div class="grid grid-2">
-    <div>
-      <h1 class="site-title">ALBERT VO</h1>
-      <p class="motto"><em>"Building End to End Solutions"</em></p>
+<section class="masthead">
+  <div class="masthead-layout">
+    <div class="masthead-left">
+      <h1>ALBERT VO</h1>
+      <div class="masthead-meta">
+        <p>EST. 2006</p>
+        <p>SAN JOSE, CA</p>
+        <p class="status">CURRENT STATUS: <strong>AVAILABLE</strong></p>
+      </div>
     </div>
-    <div class="hero-meta">
-      <p>EST. 2006</p>
-      <p>SAN JOSE, CA</p>
-      <p class="status">CURRENT STATUS: <strong>AVAILABLE</strong></p>
+    <div class="masthead-right">
+      <div class="spotify-display">
+        <p class="spotify-label">{spotifyData.isPlaying ? "WHAT I'M LISTENING TO:" : "LAST PLAYED:"}</p>
+        <p class="spotify-title">{displayTitle}</p>
+        <p class="spotify-artist">{spotifyData.artist}</p>
+        <p class="spotify-bar">{getProgressBar(spotifyData.progress_ms, spotifyData.duration_ms, 20)}</p>
+        <p class="spotify-time">
+          <span>{formatTime(spotifyData.progress_ms)}</span>
+          <span>{formatTime(spotifyData.duration_ms)}</span>
+        </p>
+      </div>
     </div>
   </div>
+</section>
+
+<section class="hero">
+  <p class="motto"><em>"Building End to End Solutions"</em></p>
   <p class="hero-tagline">
     Software engineer building robust, scalable systems from the metal to the browser.
   </p>
@@ -199,51 +188,6 @@
   </div>
 </section>
 
-<section class="ascii-art-container">
-  <pre class="ascii-art">
- ________________________________
-| \___===____________________()__\
-| |                              |
-| |   _________________________  |
-| |  |                        |  |
-| |  | {truncate(
-      spotifyData.isPlaying ? "NOW PLAYING:" : "LAST PLAYED:",
-      22,
-    )} |  |
-| |  |                        |  |
-| |  | {truncate(spotifyData.title, 22)} |  |
-| |  | {truncate(spotifyData.artist, 22)} |  |
-| |  | {getProgressBar(
-      spotifyData.progress_ms,
-      spotifyData.duration_ms,
-      22,
-    )} |  |
-| |  | {getPlaybackStatus(
-      spotifyData.progress_ms,
-      spotifyData.duration_ms,
-      22,
-    )} |  |
-| |  |                        |  |
-| |  |                        |  |
-| |  |                        |  |
-| |  |________________________|  |
-| |                              |
-| |                              |
-| |              @@@@            |
-| |           @@@Menu@@@         |
-| |          @@@@@@@@@@@@        |
-| |         @&lt;&lt;@@@() @@@&gt;&gt;@      |
-| |          @@@@@@@@@@@@        |
-| |           @@@ ||&gt; @@@        |
-| |              @@@@            |
-| |                              |
-| |                              |
-| |                              |
-| |                              |
- \|______________________________|
-  </pre>
-</section>
-
 <section class="footer">
   <div class="grid grid-2">
     <div>
@@ -258,39 +202,89 @@
 </section>
 
 <style>
-  .hero-top-border {
+  .masthead {
     border-top: 3px solid black;
-    padding: 0;
-    height: 0;
+    padding: 0.25rem 0 0;
     margin-top: 0;
+  }
+
+  .masthead-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .masthead-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .masthead-left h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .masthead-meta {
+    margin-top: 1rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  .masthead-meta .status {
+    margin-top: 0.5rem;
+  }
+
+  .masthead-right {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .spotify-display {
+    font-size: 0.75rem;
+  }
+
+  .spotify-label {
+    color: #888;
+    margin-bottom: 0.15rem;
+  }
+
+  .spotify-title {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .spotify-artist {
+    color: #555;
+  }
+
+  .spotify-bar {
+    letter-spacing: -0.05em;
+    margin-top: 0.25rem;
+  }
+
+  .spotify-time {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 0.65rem;
   }
 
   .hero {
-    margin-top: 0;
-    border-top: none;
-  }
-
-  .site-title {
-    margin-bottom: 0.25rem;
+    margin-top: 2rem;
   }
 
   .motto {
     font-weight: 400;
   }
 
-  .hero-meta {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    text-align: right;
-    font-weight: 700;
-  }
-
   .hero-tagline {
-    margin-top: 1.5rem;
-  }
-
-  .status {
     margin-top: 1rem;
   }
 
@@ -364,24 +358,6 @@
     margin-bottom: 0.25rem;
   }
 
-  .ascii-art-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 6rem 0;
-    text-align: center;
-  }
-
-  .ascii-art {
-    font-family: "Space Mono", monospace;
-    font-size: 20px;
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    white-space: pre;
-    display: inline-block;
-    text-align: left;
-  }
-
   .overlay {
     position: absolute;
     top: 0;
@@ -399,15 +375,31 @@
   }
 
   @media (max-width: 767px) {
-    .hero-meta,
+    .masthead-layout {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .masthead-right {
+      text-align: left;
+      align-self: flex-start;
+    }
+
+    .spotify-time {
+      justify-content: flex-start;
+      gap: 2rem;
+    }
+
     .footer-links {
       text-align: left;
       justify-content: flex-start;
       margin-top: 2rem;
     }
+
     .project-item {
       grid-template-columns: 1fr;
     }
+
     .project-image-placeholder {
       order: -1;
     }

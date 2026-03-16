@@ -14,7 +14,7 @@ export const projects: Project[] = [
     year: "2025",
     slug: "careflow",
     description:
-      "Revolutionizing nursing assistant education through immersive patient simulations and personalized quizzes.",
+      "Next.js monolith simulator for CNA skills and written exams, utilizing Google Gemini for AI-powered turn-by-turn evaluations and Pinecone for RAG-based question generation.",
     tags: ["#REACT", "#NODEJS", "#SQL"],
     link: "/projects/careflow",
     github: "https://github.com/OpalWight/careflow",
@@ -34,7 +34,7 @@ export const projects: Project[] = [
     year: "2026",
     slug: "cyclone",
     description:
-      "High-performance computer vision system for gate detection using YOLO and distributed computing.",
+      "High-performance computer vision system for gate detection using YOLO and distributed computing. Also reworked frontend carousel components to comply with school accessibility standards.",
     tags: ["#GO", "#PYTHON", "#YOLO"],
     link: "/projects/cyclone",
     github: "https://github.com/OpalWight/cyclone",
@@ -50,21 +50,21 @@ export const projects: Project[] = [
     github: "https://github.com/OpalWight/base-pairing-probability-model",
   },
   {
-    title: "BARNYARD",
+    title: "THE RANCH",
     year: "2025",
-    slug: "barnyard",
+    slug: "the-ranch",
     description:
       "Custom-built k3s homelab optimized for media streaming, high-availability file storage, and localized machine learning workloads.",
     tags: ["#LINUX", "#KUBERNETES"],
-    link: "/projects/barnyard",
-    github: "https://github.com/OpalWight/barnyard",
+    link: "/projects/the-ranch",
+    github: "https://github.com/OpalWight/the-ranch",
   },
   {
     title: "SONG HIT PREDICTOR",
     year: "2025",
     slug: "song-hit-predictor",
     description:
-      "Placeholder description for Song Hit Predictor.",
+      "macOS application leveraging advanced ML (Demucs, Whisper) for real-time vocal training, source separation, and high-precision pitch tracking.",
     tags: [],
     link: "/projects/song-hit-predictor",
     github: "https://github.com/OpalWight/song-hit-predictor",
@@ -74,7 +74,7 @@ export const projects: Project[] = [
     year: "2025",
     slug: "neural-voyager",
     description:
-      "Placeholder description for Neural Voyager.",
+      "Brain computer interface that translates EEG (brain waves) into rover motion controls.",
     tags: [],
     link: "/projects/neural-voyager",
     github: "https://github.com/OpalWight/neural-voyager",
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     year: "2025",
     slug: "neurotech-internal",
     description:
-      "Placeholder description for Neurotech Internal.",
+      "Internal platform built with Svelte and AWS Serverless for automating club administration, event attendance tracking via photo metadata, and member management.",
     tags: [],
     link: "/projects/neurotech-internal",
     github: "https://github.com/OpalWight/neurotech-internal",
@@ -94,7 +94,7 @@ export const projects: Project[] = [
     year: "2026",
     slug: "haybale",
     description:
-      "Placeholder description for HayBale.",
+      "Drop box service for the homelab.",
     tags: [],
     link: "/projects/haybale",
     github: "https://github.com/OpalWight/haybale",
