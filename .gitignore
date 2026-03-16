@@ -14,6 +14,9 @@ Thumbs.db
 
 # Env
 .env
+
+# Scripts
+scripts/random_tracks.py
 .env.*
 !.env.example
 !.env.test
@@ -22,3 +25,6 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .env
+
+# Scripts
+scripts/random_tracks.py

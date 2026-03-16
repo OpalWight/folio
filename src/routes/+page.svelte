@@ -134,7 +134,7 @@
   <div class="grid grid-2">
     <div>
       <h1 class="site-title">ALBERT VO</h1>
-      <p class="motto">"Building End to End Solutions"</p>
+      <p class="motto"><em>"Building End to End Solutions"</em></p>
     </div>
     <div class="hero-meta">
       <p>EST. 2006</p>
@@ -142,28 +142,25 @@
       <p class="status">CURRENT STATUS: <strong>AVAILABLE</strong></p>
     </div>
   </div>
+  <p class="hero-tagline">
+    Software engineer building robust, scalable systems from the metal to the browser.
+  </p>
 </section>
 
 <section class="about">
   <h2 class="section-header">ABOUT ME</h2>
 
-  <div class="grid grid-2">
-    <div>
-      <p class="bold-italic">
-        I am a software engineer specializing in architecting systems from the
-        metal to the browser.
-      </p>
-    </div>
+  <p>
+    <strong>I am a software engineer specializing in architecting systems from the
+    metal to the browser.</strong>
+  </p>
 
-    <div>
-      <p>
-        A pre-med student turned software engineer, I bridge the gap between
-        clinical empathy and technical complexity. I'm dedicated to end-to-end
-        ownership and building robust, scalable systems that prioritize
-        human-centric impact.
-      </p>
-    </div>
-  </div>
+  <p>
+    A pre-med student turned software engineer, I bridge the gap between
+    clinical empathy and technical complexity. I'm dedicated to end-to-end
+    ownership and building robust, scalable systems that prioritize
+    human-centric impact.
+  </p>
 </section>
 
 <section class="projects">
@@ -188,21 +185,17 @@
 <section class="hobbies">
   <h2 class="section-header">OFF THE CLOCK</h2>
 
-  <div class="grid grid-2">
-    <div class="interactive-zone">
-      <h3 class="hobby-title">GUITAR</h3>
+  <div class="hobby-item">
+    <h3 class="hobby-title">GUITAR</h3>
+    <p>
+      still very much a noob, but I enjoy learning to play and sing along to
+      wtv song I'm listening to at the time!
+    </p>
+  </div>
 
-      <p>
-        still very much a noob, but I enjoy learning to play and sing along to
-        wtv song I'm listening to at the time!
-      </p>
-    </div>
-
-    <div class="interactive-zone">
-      <h3 class="hobby-title">OVERWATCH</h3>
-
-      <p>Tracer main. Need a duo, hmu @opalwight on steam.</p>
-    </div>
+  <div class="hobby-item">
+    <h3 class="hobby-title">OVERWATCH</h3>
+    <p>Tracer main. Need a duo, hmu @opalwight on steam.</p>
   </div>
 </section>
 
@@ -266,21 +259,23 @@
 
 <style>
   .hero-top-border {
-    border-top: 8px solid black;
+    border-top: 3px solid black;
     padding: 0;
     height: 0;
+    margin-top: 0;
+  }
+
+  .hero {
+    margin-top: 0;
+    border-top: none;
   }
 
   .site-title {
-    font-size: clamp(2rem, 5vw, 4rem);
-    line-height: 1;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .motto {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-style: italic;
+    font-weight: 400;
   }
 
   .hero-meta {
@@ -291,19 +286,22 @@
     font-weight: 700;
   }
 
+  .hero-tagline {
+    margin-top: 1.5rem;
+  }
+
   .status {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .section-header {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 1rem;
   }
 
   .project-item {
@@ -312,11 +310,10 @@
     background: var(--container-bg);
     text-decoration: none;
     color: inherit;
-    max-width: 200px;
   }
 
   .project-content {
-    padding: 0.75rem;
+    padding: 0.45rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -339,32 +336,39 @@
   }
 
   .project-content h3 {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     margin: 0;
   }
 
   .project-year {
-    font-size: 0.7rem;
-    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    margin-top: 0.15rem;
     color: #888;
   }
 
   .project-image-placeholder {
     background-color: #ccc;
     position: relative;
-    aspect-ratio: 1 / 0.75;
+    aspect-ratio: 16 / 9;
+  }
+
+  .about p {
+    margin-top: 1rem;
+  }
+
+  .hobby-item {
+    margin-top: 1.5rem;
   }
 
   .hobby-title {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .ascii-art-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6rem 2rem;
+    padding: 6rem 0;
     text-align: center;
   }
 
