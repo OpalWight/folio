@@ -51,6 +51,7 @@
     async function updateSpotify() {
       try {
         const res = await fetch("/api/spotify");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (data.title) {
           spotifyData = data;
@@ -129,12 +130,6 @@
   </div>
 </section>
 
-<section class="hero">
-  <p class="motto"><em>"Building End to End Solutions"</em></p>
-  <p class="hero-tagline">
-    Software engineer building robust, scalable systems from the metal to the browser.
-  </p>
-</section>
 
 <section class="about">
   <h2 class="section-header">ABOUT ME</h2>
@@ -159,6 +154,9 @@
     {#each projects as project}
       <a href={project.link} class="project-item">
         <div class="project-image-placeholder">
+          {#if project.image}
+            <img src={project.image} alt={project.title} class="project-image" />
+          {/if}
           <div class="overlay"></div>
         </div>
 
@@ -276,19 +274,7 @@
     font-size: 0.65rem;
   }
 
-  .hero {
-    margin-top: 2rem;
-  }
-
-  .motto {
-    font-weight: 400;
-  }
-
-  .hero-tagline {
-    margin-top: 1rem;
-  }
-
-  .section-header {
+.section-header {
     margin-bottom: 1rem;
   }
 
@@ -344,6 +330,17 @@
     background-color: #ccc;
     position: relative;
     aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .about p {

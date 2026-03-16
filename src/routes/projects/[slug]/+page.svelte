@@ -36,12 +36,14 @@
   </div>
 </section>
 
+{#if data.project.github}
 <section class="project-links">
   <h2 class="section-header">LINKS</h2>
   <a href={data.project.github} target="_blank" rel="noopener noreferrer" class="action-btn">
     VIEW ON GITHUB &rarr;
   </a>
 </section>
+{/if}
 
 <style>
   .project-nav {
