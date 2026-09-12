@@ -19,7 +19,6 @@
 
 	let armed = $state(false); // the iframe / video is only created once it is wanted
 	let loaded = $state(false);
-	let blocked = $state(false); // the site refused to be framed (X-Frame-Options / CSP)
 	let video = $state<HTMLVideoElement | undefined>(undefined);
 	let w = $state(0);
 
@@ -37,27 +36,20 @@
 		}
 	});
 
-	const showing = $derived(on && armed && loaded && !blocked && source !== 'none');
+	const showing = $derived(on && armed && loaded && source !== 'none');
 
 	/**
-	 * A frame refused by X-Frame-Options still fires `load`, but leaves an empty
-	 * same-origin document behind. Detect that and keep the still image rather than
-	 * cross-fading to a blank screen.
+	 * A frame a site refuses to serve (X-Frame-Options, or a CSP frame-ancestors list
+	 * this origin is not on) still fires `load`, and its `contentDocument` reads null
+	 * exactly like a healthy cross-origin frame — so there is no reliable way to tell
+	 * the two apart from here. Instead of guessing, the still image stays put
+	 * underneath at full opacity and the frame is layered over it: a site that loads
+	 * paints across it, a refused one stays transparent and the still shows through.
 	 */
-	function onFrameLoad(e: Event) {
-		const f = e.currentTarget as HTMLIFrameElement;
-		try {
-			const d = f.contentDocument;
-			if (d && d.body && d.body.childElementCount === 0 && !d.body.textContent?.trim()) blocked = true;
-		} catch {
-			// cross-origin: it rendered, which is what we want
-		}
-		loaded = true;
-	}
 </script>
 
 <div class="preview" bind:clientWidth={w}>
-	<div class="still" class:out={showing}>
+	<div class="still">
 		{#if project.image}
 			<img src={project.image} alt="" loading="lazy" />
 		{:else}
@@ -74,7 +66,7 @@
 					loading="lazy"
 					sandbox="allow-scripts allow-same-origin"
 					style="transform: scale({w ? w / 1280 : 0.3})"
-					onload={onFrameLoad}
+					onload={() => (loaded = true)}
 				></iframe>
 			{:else}
 				<!-- svelte-ignore a11y_media_has_caption -->
@@ -89,7 +81,7 @@
 				></video>
 			{/if}
 		</div>
-		{#if !loaded && !blocked}
+		{#if !loaded}
 			<span class="progress" aria-hidden="true"></span>
 		{/if}
 	{/if}
@@ -114,12 +106,8 @@
 		object-fit: cover;
 		object-position: top center;
 	}
-	.still.out {
-		opacity: 0;
-	}
 	.media {
 		opacity: 0;
-		background: var(--white);
 		overflow: hidden;
 		pointer-events: none;
 	}
