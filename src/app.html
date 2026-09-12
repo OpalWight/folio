@@ -10,6 +10,13 @@
 			rel="stylesheet"
 			href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
 		/>
+		<script>
+			// show the intro curtain once per session; stamped before first paint so it never flashes
+			try {
+				if (sessionStorage.getItem('folio:intro')) document.documentElement.classList.add('no-intro');
+				else sessionStorage.setItem('folio:intro', '1');
+			} catch (e) {}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

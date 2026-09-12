@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { projects } from '$lib/projects';
-	import Carousel from '$lib/components/Carousel.svelte';
+	import Catalogue from '$lib/components/Catalogue.svelte';
 	import { reveal } from '$lib/reveal';
 </script>
 
@@ -15,17 +15,17 @@
 	</div>
 	<div class="rule"></div>
 
-	<div class="car-wrap">
-		<Carousel {projects} />
+	<div class="cat-wrap">
+		<Catalogue {projects} />
 	</div>
 </section>
 
 <style>
 	.pg {
 		padding-top: calc(var(--header-h) + 56px);
-		padding-bottom: 2rem;
+		padding-bottom: 6rem;
 	}
-	.car-wrap {
-		margin-top: 2.4rem;
+	.cat-wrap {
+		margin-top: clamp(2.6rem, 5vw, 4.5rem);
 	}
 </style>

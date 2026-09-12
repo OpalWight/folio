@@ -9,7 +9,7 @@
 <div class="wip">
 	<DotField
 		src="/lily.jpg"
-		options={{ cell: 4, loadIn: false, wander: false, interactive: false, push: 70, focus: [0.72, 0.45], ...options }}
+		options={{ cell: 4, loadIn: false, wander: false, interactive: false, breathe: false, sway: false, still: true, push: 70, focus: [0.72, 0.45], ...options }}
 	/>
 	<span class="mono tag">{label}</span>
 </div>

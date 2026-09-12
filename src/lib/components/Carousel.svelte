@@ -144,6 +144,7 @@
 		opacity: 1;
 	}
 	.shot {
+		position: relative; /* Preview's layers are absolute; they need this to stay in the slide */
 		aspect-ratio: 16 / 10;
 		background: var(--mist);
 		overflow: hidden;

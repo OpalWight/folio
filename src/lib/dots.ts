@@ -32,6 +32,8 @@ export interface DotFieldOptions {
 	wander?: boolean;
 	breathe?: boolean;
 	interactive?: boolean;
+	/** Draw one frame and stop. For placeholders, where a running rAF loop is pure waste. */
+	still?: boolean;
 	color?: string;
 	background?: string;
 }
@@ -54,6 +56,7 @@ const DEFAULTS: Required<DotFieldOptions> = {
 	wander: true,
 	breathe: true,
 	interactive: true,
+	still: false,
 	color: '#2F45D6',
 	background: '#FFFFFF'
 };
@@ -147,8 +150,12 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 	const buckets: number[][] = Array.from({ length: 10 }, () => []);
 
 	function frame(now: number) {
-		raf = requestAnimationFrame(frame);
-		if (!run || !N) return;
+		if (!run || !N) {
+			// not built yet (or off screen): come back next frame whatever the mode
+			raf = requestAnimationFrame(frame);
+			return;
+		}
+		if (!o.still) raf = requestAnimationFrame(frame);
 		const t = (now - start) / 1000;
 		const maxR = cell * o.maxR;
 		const p = o.loadIn && !reduce ? Math.min(1, t / 1.2) : 1;
@@ -259,6 +266,10 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 		clearTimeout(rt);
 		rt = window.setTimeout(() => {
 			build();
+			if (o.still) {
+				cancelAnimationFrame(raf);
+				raf = requestAnimationFrame(frame);
+			}
 		}, 80);
 	});
 
