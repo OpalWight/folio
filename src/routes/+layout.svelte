@@ -3,7 +3,6 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Transition from '$lib/components/Transition.svelte';
-	import Preloader from '$lib/components/Preloader.svelte';
 	import Cursor from '$lib/components/Cursor.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -46,7 +45,6 @@
 </svelte:head>
 
 <div id="top"></div>
-<Preloader />
 <Cursor />
 <Header />
 <Transition />

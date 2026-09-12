@@ -70,10 +70,6 @@
 		// cursor stays the same dot everywhere, it does not change shape over targets
 		let hover = false;
 		let sunk = false; // over a live preview: the framed site owns the pointer now
-		// the intro curtain covers the hero's field; until it lifts there is nothing
-		// there for the cursor to dissolve into, so it stays an ordinary dot
-		let curtain = !document.documentElement.classList.contains('no-intro');
-		if (curtain) setTimeout(() => (curtain = false), 2700);
 		let inside = false; // pointer is inside the window
 		let zone: DotFieldHandle | null = null;
 		let ax = 0,
@@ -169,7 +165,7 @@
 			hover = !sunk && !!t?.closest?.(HIT);
 			// a link lying over the field still needs a pointer, so hovering one counts
 			// as being out of the field and pulls a dot along with it
-			const z = hover || curtain ? null : dotZoneAt(mx, my);
+			const z = hover ? null : dotZoneAt(mx, my);
 
 			if (first) {
 				hx = mx;
@@ -225,7 +221,7 @@
 			lastFrame = now;
 
 			// the field can go away under the cursor (route change); don't strand it
-			if (mode === 'field' && (curtain || !dotZoneAt(mx, my))) {
+			if (mode === 'field' && !dotZoneAt(mx, my)) {
 				mode = 'free';
 				hx = mx;
 				hy = my;
@@ -422,7 +418,7 @@
 		inset: 0;
 		width: 100vw;
 		height: 100vh;
-		z-index: 300; /* above the intro curtain and the page transition */
+		z-index: 300; /* above the page transition */
 		pointer-events: none;
 	}
 </style>
