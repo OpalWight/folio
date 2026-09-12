@@ -34,6 +34,8 @@ export interface DotFieldOptions {
 	interactive?: boolean;
 	/** Draw one frame and stop. For placeholders, where a running rAF loop is pure waste. */
 	still?: boolean;
+	/** Register the field as a cursor zone: the page's dot cursor is born from and dissolves back into it. */
+	cursorZone?: boolean;
 	color?: string;
 	background?: string;
 }
@@ -57,14 +59,62 @@ const DEFAULTS: Required<DotFieldOptions> = {
 	breathe: true,
 	interactive: true,
 	still: false,
+	cursorZone: false,
 	color: '#2F45D6',
 	background: '#FFFFFF'
 };
 
+/** A disturbance thrown into a field: an expanding ring, or (speed 0) a standing pull. */
+export interface RippleOptions {
+	/** Displacement in cells at the crest. Negative sucks dots inward. */
+	power?: number;
+	/** Ring expansion speed in px/s. 0 keeps it at the origin — a pull, not a wave. */
+	speed?: number;
+	/** Half-thickness of the ring in px. */
+	width?: number;
+	/** Amplitude half-life in seconds. */
+	decay?: number;
+}
+
+export interface DotFieldHandle {
+	canvas: HTMLCanvasElement;
+	/** Throw a ripple at a viewport point. Outside the canvas it is simply ignored. */
+	ripple(clientX: number, clientY: number, o?: RippleOptions): void;
+	/** Cached canvas rect — refreshed on scroll and resize, so this is free to call. */
+	rect(): DOMRect;
+	/** The rect actually on screen: the canvas clipped by whatever crops it. */
+	hitRect(): DOMRect;
+	/** Radius of the field's largest dot, in CSS px. The cursor is born this size. */
+	dotRadius(): number;
+	destroy(): void;
+}
+
+/** Stand-in for a canvas with no 2D context, so callers never branch on it. */
+const inert = (canvas: HTMLCanvasElement): DotFieldHandle => ({
+	canvas,
+	ripple: () => {},
+	rect: () => canvas.getBoundingClientRect(),
+	hitRect: () => canvas.getBoundingClientRect(),
+	dotRadius: () => 0,
+	destroy: () => {}
+});
+
+/** Fields that declared themselves cursor zones, in mount order. */
+const zones = new Set<DotFieldHandle>();
+
+/** The cursor zone under a viewport point, if any. */
+export function dotZoneAt(x: number, y: number): DotFieldHandle | null {
+	for (const z of zones) {
+		const r = z.hitRect();
+		if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return z;
+	}
+	return null;
+}
+
 export function createDotField(canvas: HTMLCanvasElement, src: string, opts: DotFieldOptions = {}) {
 	const o = { ...DEFAULTS, ...opts };
 	const ctx = canvas.getContext('2d');
-	if (!ctx) return () => {};
+	if (!ctx) return inert(canvas);
 	const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	const img = new Image();
@@ -88,6 +138,11 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 		raf = 0;
 	let px = -1e4,
 		py = -1e4;
+
+	type Ripple = { x: number; y: number; t0: number; power: number; speed: number; w: number; decay: number };
+	const ripples: Ripple[] = [];
+	// live ring parameters, recomputed once per frame and read N times inside the dot loop
+	const live: { x: number; y: number; rad: number; w: number; amp: number }[] = [];
 
 	function build() {
 		dpr = Math.min(devicePixelRatio || 1, 2);
@@ -155,7 +210,7 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 			raf = requestAnimationFrame(frame);
 			return;
 		}
-		if (!o.still) raf = requestAnimationFrame(frame);
+		if (!o.still || ripples.length) raf = requestAnimationFrame(frame);
 		const t = (now - start) / 1000;
 		const maxR = cell * o.maxR;
 		const p = o.loadIn && !reduce ? Math.min(1, t / 1.2) : 1;
@@ -173,6 +228,19 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 		const pushR2 = o.push * o.push;
 		const windR = o.push * 1.3,
 			windR2 = windR * windR;
+
+		live.length = 0;
+		for (let r = ripples.length - 1; r >= 0; r--) {
+			const q = ripples[r];
+			const age = t - q.t0;
+			const amp = q.power * Math.exp(-age / q.decay);
+			if (age < 0 || Math.abs(amp) < 0.02) {
+				ripples.splice(r, 1);
+				continue;
+			}
+			// the ring softens as it travels, the way a wave spreads its energy out
+			live.push({ x: q.x, y: q.y, rad: age * q.speed, w: q.w + age * q.speed * 0.35, amp });
+		}
 
 		for (let i = 0; i < N; i++) {
 			let tx = 0,
@@ -194,6 +262,17 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 					tx += (ddx / dist) * f;
 					ty += (ddy / dist) * f;
 				}
+			}
+			for (let r = 0; r < live.length; r++) {
+				const q = live[r];
+				const ddx = x0 - q.x,
+					ddy = y0 - q.y;
+				const dist = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+				const delta = dist - q.rad;
+				if (delta < -q.w || delta > q.w) continue;
+				const f = Math.cos((delta / q.w) * 1.5708) * q.amp * cell;
+				tx += (ddx / dist) * f;
+				ty += (ddy / dist) * f;
 			}
 			if (o.wander && !reduce) {
 				const ddx = x0 - wx,
@@ -251,6 +330,34 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 		canvas.addEventListener('pointercancel', onLeave);
 	}
 
+	let cached: DOMRect | null = null;
+	let cachedHit: DOMRect | null = null;
+	const rect = () => (cached ??= canvas.getBoundingClientRect());
+	/**
+	 * A parallaxing field hangs below the section that crops it, so its own rect is
+	 * not what the eye sees. Intersect it with the first ancestor that clips, or the
+	 * cursor keeps treating a band of blank page as if it were still the dot field.
+	 */
+	const hitRect = () => {
+		if (cachedHit) return cachedHit;
+		let r = rect();
+		for (let el = canvas.parentElement; el; el = el.parentElement) {
+			const o = getComputedStyle(el);
+			if (o.overflow === 'visible' && o.overflowY === 'visible' && o.overflowX === 'visible') continue;
+			const b = el.getBoundingClientRect();
+			const top = Math.max(r.top, b.top),
+				left = Math.max(r.left, b.left);
+			r = new DOMRect(left, top, Math.max(0, Math.min(r.right, b.right) - left), Math.max(0, Math.min(r.bottom, b.bottom) - top));
+			break;
+		}
+		return (cachedHit = r);
+	};
+	const clearRect = () => {
+		cached = cachedHit = null;
+	};
+	addEventListener('scroll', clearRect, { passive: true });
+	addEventListener('resize', clearRect, { passive: true });
+
 	const io = new IntersectionObserver((e) => {
 		run = e[0].isIntersecting;
 	});
@@ -284,14 +391,46 @@ export function createDotField(canvas: HTMLCanvasElement, src: string, opts: Dot
 		})
 		.catch(() => {});
 
-	return () => {
-		cancelAnimationFrame(raf);
-		ro.disconnect();
-		io.disconnect();
-		document.removeEventListener('visibilitychange', onVis);
-		canvas.removeEventListener('pointermove', onPointer);
-		canvas.removeEventListener('pointerdown', onPointer);
-		canvas.removeEventListener('pointerleave', onLeave);
-		canvas.removeEventListener('pointercancel', onLeave);
+	const handle: DotFieldHandle = {
+		canvas,
+		rect,
+		hitRect,
+		dotRadius: () => cell * o.maxR,
+		ripple(clientX, clientY, r = {}) {
+			if (reduce) return;
+			const b = rect();
+			ripples.push({
+				x: clientX - b.left,
+				y: clientY - b.top,
+				t0: (performance.now() - start) / 1000,
+				power: r.power ?? 1.8,
+				// the dots ride a spring that needs ~0.25s to answer, so a ring has to
+				// dwell on them at least that long: width >= 0.13 * speed
+				speed: r.speed ?? 440,
+				w: r.width ?? 62,
+				decay: r.decay ?? 0.42
+			});
+			if (ripples.length > 6) ripples.shift();
+			// a still field has no running loop of its own; give the wave one
+			if (o.still) {
+				cancelAnimationFrame(raf);
+				raf = requestAnimationFrame(frame);
+			}
+		},
+		destroy() {
+			zones.delete(handle);
+			cancelAnimationFrame(raf);
+			ro.disconnect();
+			io.disconnect();
+			document.removeEventListener('visibilitychange', onVis);
+			removeEventListener('scroll', clearRect);
+			removeEventListener('resize', clearRect);
+			canvas.removeEventListener('pointermove', onPointer);
+			canvas.removeEventListener('pointerdown', onPointer);
+			canvas.removeEventListener('pointerleave', onLeave);
+			canvas.removeEventListener('pointercancel', onLeave);
+		}
 	};
+	if (o.cursorZone) zones.add(handle);
+	return handle;
 }

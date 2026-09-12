@@ -10,7 +10,7 @@
 
 	let canvas: HTMLCanvasElement;
 
-	onMount(() => createDotField(canvas, src, options));
+	onMount(() => createDotField(canvas, src, options).destroy);
 </script>
 
 <canvas bind:this={canvas} aria-label={label} role={label ? 'img' : 'presentation'}></canvas>

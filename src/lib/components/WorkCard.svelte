@@ -1,43 +1,56 @@
 <script lang="ts">
-	import Laptop from '$lib/components/Laptop.svelte';
+	import Laptop, { type Mock } from '$lib/components/Laptop.svelte';
 	import Preview from '$lib/components/Preview.svelte';
 	import type { Project } from '$lib/projects';
 
-	let { project, pose = 'float' }: { project: Project; pose?: 'float' | 'low' | 'hero' } = $props();
+	let { project, mock = 'studio' }: { project: Project; mock?: Mock } = $props();
 
 	let active = $state(false);
+	let open = $state(false);
+	let dwell = 0;
+
+	const DWELL = 90; // just enough to ignore a pointer sweeping across the card
+
+	function enter() {
+		active = true;
+		clearTimeout(dwell);
+		dwell = window.setTimeout(() => (open = true), DWELL);
+	}
+	function leave() {
+		clearTimeout(dwell);
+		open = false;
+		active = false;
+	}
 </script>
 
-<a
-	class="card"
-	href={project.link}
-	onpointerenter={() => (active = true)}
-	onpointerleave={() => (active = false)}
-	onfocusin={() => (active = true)}
-	onfocusout={() => (active = false)}
->
-	<div class="img">
-		<Laptop hovered={active} {pose}>
+<svelte:window onscroll={() => clearTimeout(dwell)} />
+
+<article class="card">
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="frame"
+		onpointerenter={enter}
+		onpointerleave={leave}
+		onfocusin={enter}
+		onfocusout={leave}
+	>
+		<Laptop hovered={active && !open} expanded={open} {mock}>
 			{#snippet screen()}
-				<Preview {project} {active} />
+				<Preview {project} {active} interactive={open} />
 			{/snippet}
 		</Laptop>
 	</div>
 
 	<div class="txt">
-		<h3>{project.title}</h3>
+		<h3><a href={project.link}>{project.title}</a></h3>
 		<ul class="arrows">
 			{#each project.results ?? [] as r}<li>{r}</li>{/each}
 		</ul>
 		<div class="foot mono">
-			<span>{project.dates ?? project.year}</span>
-			<span class="rt">
-				<span>{project.role ?? ''}</span>
-				<span class="go">Open →</span>
-			</span>
+			<a class="go" href={project.link}>Open →</a>
 		</div>
 	</div>
-</a>
+</article>
 
 <style>
 	.card {
@@ -46,15 +59,14 @@
 		gap: 2.4rem;
 		align-items: start;
 		color: var(--deep);
-		text-decoration: none;
 	}
-	.card:hover {
-		text-decoration: none;
-	}
-	.img {
+	/* 16:10 so the screen lands on the panel exactly when it takes over */
+	.frame {
 		position: relative;
+		aspect-ratio: 16 / 10;
 		min-width: 0;
 	}
+
 	.txt {
 		display: flex;
 		flex-direction: column;
@@ -67,6 +79,13 @@
 		font-size: clamp(1.7rem, 2.8vw, 2.3rem);
 		line-height: 1.05;
 		margin: 0 0 1rem;
+	}
+	h3 a {
+		color: var(--deep);
+	}
+	h3 a:hover {
+		text-decoration: none;
+		color: var(--dot);
 	}
 	.card :global(ul.arrows li) {
 		transition: transform 0.45s var(--ease-out);
@@ -84,14 +103,7 @@
 		margin-top: auto;
 		padding-top: 1.2rem;
 		display: flex;
-		justify-content: space-between;
 		align-items: baseline;
-		gap: 1rem;
-	}
-	.rt {
-		display: flex;
-		align-items: baseline;
-		gap: 0.9rem;
 	}
 	.go {
 		color: var(--dot);
@@ -101,7 +113,8 @@
 			opacity 0.3s,
 			transform 0.4s var(--ease-out);
 	}
-	.card:hover .go {
+	.card:hover .go,
+	.go:focus-visible {
 		opacity: 1;
 		transform: none;
 	}
@@ -111,7 +124,8 @@
 			gap: 1.4rem;
 		}
 		.go {
-			display: none;
+			opacity: 1;
+			transform: none;
 		}
 	}
 </style>

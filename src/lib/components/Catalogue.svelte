@@ -26,7 +26,7 @@
 					{#if p.image}
 						<img src={p.image} alt={p.title} loading="lazy" decoding="async" />
 					{:else}
-						<Wip />
+						<Wip seed={p.slug} />
 					{/if}
 				</div>
 			</div>

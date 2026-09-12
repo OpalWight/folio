@@ -92,6 +92,14 @@ img {
 	display: block;
 }
 
+/* ---------- dot cursor ----------
+   Set only when Cursor.svelte takes over: fine pointer, motion allowed. The system
+   arrow is replaced by a blue dot outside the hero, and by nothing inside it. */
+.dot-cursor,
+.dot-cursor * {
+	cursor: none !important;
+}
+
 /* ---------- type utilities ---------- */
 .mono {
 	font-family: var(--mono);
@@ -135,6 +143,31 @@ img {
 	font-size: clamp(2.6rem, 6vw, 4.6rem);
 	line-height: 0.9;
 	letter-spacing: -0.01em;
+}
+
+/* centred variant, for a title that heads a full-width section rather than a column */
+.sec.mid {
+	justify-content: center;
+	text-align: center;
+}
+
+/* "Work / Featured": the big serif word, a thin slash, then a small tracked label
+   sitting on the same baseline */
+.sec h2 .cut {
+	font-family: var(--serif);
+	font-size: 0.62em;
+	font-weight: 400;
+	color: var(--mid);
+	margin: 0 0.1em 0 0.18em;
+}
+
+.sec h2 .kick {
+	font-family: var(--sans);
+	font-size: clamp(0.68rem, 1.3vw, 0.92rem);
+	font-weight: 600;
+	letter-spacing: 0.17em;
+	text-transform: uppercase;
+	color: var(--deep);
 }
 
 .sec .right {

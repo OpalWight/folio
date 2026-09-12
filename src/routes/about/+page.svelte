@@ -19,7 +19,7 @@
 
 	<div class="story" use:reveal data-stagger-group>
 		<div class="portrait" data-stagger>
-			<Wip options={{ cell: 3.6, push: 90 }} />
+			<Wip seed="about" options={{ cell: 3.6, push: 90 }} />
 		</div>
 		<div class="text">
 			<p class="label" data-stagger>My story</p>

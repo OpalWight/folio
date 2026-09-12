@@ -1,7 +1,8 @@
 <script lang="ts">
 	/**
-	 * First-visit intro: the name sets itself letter by letter in blue on white,
-	 * a hairline fills underneath, then the whole curtain lifts into the hero.
+	 * First-visit intro: the name sets itself letter by letter in blue on white with a
+	 * single quiet line under it, a hairline fills, then the curtain lifts into the hero.
+	 * Deliberately small — a title card, not a splash screen.
 	 *
 	 * Driven entirely by CSS keyframes so it still clears itself without JS. A tiny
 	 * inline script in app.html stamps `no-intro` on <html> for repeat visits in the
@@ -22,7 +23,7 @@
 				{/if}
 			{/each}
 		</h1>
-		<p class="meta">Portfolio — 2026</p>
+		<p class="meta">Engineering Portfolio</p>
 	</div>
 	<span class="bar"></span>
 </div>
@@ -49,16 +50,16 @@
 	.inner {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
+		align-items: flex-start;
+		gap: 0.5rem;
 		padding: 0 var(--pad);
 	}
 
 	.name {
 		font-family: var(--serif);
-		font-size: clamp(2.8rem, 9vw, 7rem);
-		line-height: 1;
-		letter-spacing: -0.015em;
+		font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+		line-height: 1.05;
+		letter-spacing: 0.005em;
 		color: var(--dot);
 		display: flex;
 		white-space: pre;
@@ -68,7 +69,7 @@
 		transform: translateY(0.42em);
 		opacity: 0;
 		animation: rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-		animation-delay: calc(60ms * var(--i));
+		animation-delay: calc(52ms * var(--i));
 	}
 	.sp {
 		display: inline-block;
@@ -81,13 +82,13 @@
 	}
 
 	.meta {
-		font-family: var(--mono);
-		font-size: 0.68rem;
-		letter-spacing: 0.22em;
-		text-transform: uppercase;
+		font-family: var(--sans);
+		font-weight: 400;
+		font-size: clamp(0.78rem, 1.5vw, 0.92rem);
+		letter-spacing: 0.16em;
 		color: var(--mid);
 		opacity: 0;
-		animation: fade 0.6s ease forwards 0.95s;
+		animation: fade 0.6s ease forwards 0.8s;
 	}
 	@keyframes fade {
 		to {

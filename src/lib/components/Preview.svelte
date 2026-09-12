@@ -7,12 +7,20 @@
 	 * → still image → WIP placeholder.
 	 * `mode: 'hover'` only loads the live source once `active` turns true;
 	 * `mode: 'always'` loads it on mount.
+	 * `interactive` hands the pointer to the framed site once it is showing, so you can
+	 * scroll and click around inside the preview instead of only looking at it.
 	 */
 	let {
 		project,
 		mode = 'hover',
-		active = false
-	}: { project: Project; mode?: 'hover' | 'always'; active?: boolean } = $props();
+		active = false,
+		interactive = false
+	}: {
+		project: Project;
+		mode?: 'hover' | 'always';
+		active?: boolean;
+		interactive?: boolean;
+	} = $props();
 
 	const source = $derived(project.live ? 'live' : project.demo ? 'demo' : 'none');
 	const on = $derived(mode === 'always' || active);
@@ -53,12 +61,12 @@
 		{#if project.image}
 			<img src={project.image} alt="" loading="lazy" />
 		{:else}
-			<Wip options={{ cell: 3 }} />
+			<Wip seed={project.slug} options={{ cell: 3 }} />
 		{/if}
 	</div>
 
 	{#if armed && source !== 'none'}
-		<div class="media" class:in={showing}>
+		<div class="media" class:in={showing} class:live={interactive && showing}>
 			{#if source === 'live'}
 				<iframe
 					src={project.live}
@@ -111,12 +119,19 @@
 		overflow: hidden;
 		pointer-events: none;
 	}
+	/* the framed site takes the pointer once it is up, so you can scroll and click
+	   around inside it. A site that refuses to be framed still fires `load`, so its
+	   invisible frame takes the pointer too — the card's own links live in the text
+	   column, where that cannot reach them. */
+	.media.live {
+		pointer-events: auto;
+	}
 	.media.in {
 		opacity: 1;
 	}
 	.media iframe {
 		width: 1280px;
-		height: 800px;
+		height: 832px;
 		border: 0;
 		transform-origin: top left;
 	}

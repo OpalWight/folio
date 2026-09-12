@@ -20,18 +20,23 @@
 <Hero />
 
 <section id="work" class="wrap work">
-	<div class="sec" use:reveal>
-		<h2>Work</h2>
+	<div class="sec mid" use:reveal>
+		<h2>Work<span class="cut">/</span><span class="kick">Featured</span></h2>
 	</div>
 	<div class="rule"></div>
 
 	<div class="cards">
 		{#each highlights as p, i (p.slug)}
 			<div use:reveal={{ delay: 60 }}>
-				<WorkCard project={p} pose={i === 0 ? 'float' : 'low'} />
+				<WorkCard project={p} mock={i === 0 ? 'studio' : 'air'} />
 			</div>
 		{/each}
 	</div>
+
+	<div class="sec mid more" use:reveal>
+		<h2>Work<span class="cut">/</span><span class="kick">More</span></h2>
+	</div>
+	<div class="rule"></div>
 
 	<div class="carousel-wrap" use:reveal>
 		<Carousel projects={more} />
@@ -52,8 +57,17 @@
 		gap: 4rem;
 		margin-top: 2.6rem;
 	}
+	/* the second heading opens the carousel, so it carries the space the strip used to */
+	.sec.more {
+		margin-top: 5.5rem;
+	}
+	/* the carousel breaks out of the reading column and runs to both edges of the
+	   window, so the strip is cut by the page rather than by the container */
 	.carousel-wrap {
-		margin-top: 5rem;
+		margin-top: 2.6rem;
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
 	}
 	.cta {
 		display: flex;
@@ -83,8 +97,11 @@
 		.work {
 			padding-top: 3.6rem;
 		}
+		.sec.more {
+			margin-top: 3.6rem;
+		}
 		.carousel-wrap {
-			margin-top: 3.4rem;
+			margin-top: 1.8rem;
 		}
 	}
 </style>

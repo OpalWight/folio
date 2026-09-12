@@ -37,7 +37,7 @@
 		<DotField
 			src="/lily.jpg"
 			label="A white lily rendered as blue dots that drift on their own and move away from the cursor"
-			options={{ cell: 4.2, focus: [0.7, 0.45], mask: [0.2, 0.84, 0.4, 0.34], loadIn }}
+			options={{ cell: 4.2, focus: [0.7, 0.45], mask: [0.2, 0.84, 0.4, 0.34], loadIn, cursorZone: true }}
 		/>
 	</div>
 

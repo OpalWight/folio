@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Laptop from '$lib/components/Laptop.svelte';
 	import Preview from '$lib/components/Preview.svelte';
 	import { reveal } from '$lib/reveal';
 	let { data } = $props();
@@ -40,11 +39,9 @@
 		</dl>
 
 		<div class="cover" use:reveal={{ delay: 240, y: 24 }}>
-			<Laptop pose="hero">
-				{#snippet screen()}
-					<Preview project={p} mode="always" />
-				{/snippet}
-			</Laptop>
+			<div class="shot">
+				<Preview project={p} mode="always" interactive />
+			</div>
 			{#if p.live}
 				<p class="mono cap">Live · {p.live.replace(/^https?:\/\//, '')}</p>
 			{/if}
@@ -147,6 +144,14 @@
 
 	.cover {
 		position: relative;
+	}
+	/* the live site sits in a plain box and takes the pointer, so it can be used in
+	   place rather than only looked at */
+	.shot {
+		position: relative;
+		aspect-ratio: 16 / 10;
+		background: var(--mist);
+		overflow: hidden;
 	}
 	.cap {
 		margin-top: 0.7rem;
