@@ -65,19 +65,14 @@
 		font-size: 0.72rem;
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: var(--deep);
-		border: 1px solid var(--haze);
-		padding: 0.85rem 1.6rem;
-		transition:
-			background 0.25s,
-			color 0.25s,
-			border-color 0.25s;
+		color: var(--dot);
+		padding-bottom: 0.3rem;
+		border-bottom: 1px solid var(--haze);
+		transition: border-color 0.25s;
 	}
 	.cta a:hover {
 		text-decoration: none;
-		background: var(--deep);
-		color: var(--white);
-		border-color: var(--deep);
+		border-bottom-color: var(--dot);
 	}
 	@media (max-width: 860px) {
 		.cards {

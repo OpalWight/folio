@@ -4,8 +4,7 @@
 	const hobbies = [
 		{ name: 'Guitar', note: 'Still very much a noob. I learn whatever I am listening to that week and sing along.' },
 		{ name: 'Overwatch', note: 'Tracer main. Need a duo? @opalwight on Steam.' },
-		{ name: 'Homelab', note: 'A k3s cluster in the closet that streams media and trains small models.' },
-		{ name: 'Music', note: 'What I am playing right now is in the footer, live from Spotify.' }
+		{ name: 'Homelab', note: 'A k3s cluster in the closet that streams media and trains small models.' }
 	];
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Hobbies from '$lib/components/Hobbies.svelte';
+	import NowPlaying from '$lib/components/NowPlaying.svelte';
 	import Wip from '$lib/components/Wip.svelte';
 	import { reveal } from '$lib/reveal';
 </script>
@@ -47,6 +48,19 @@
 	</div>
 </section>
 
+<section class="wrap music" use:reveal data-stagger-group>
+	<div class="sec" data-stagger>
+		<h2>Music</h2>
+		<span class="right">Live from Spotify</span>
+	</div>
+	<div class="rule"></div>
+
+	<div class="np" data-stagger>
+		<p class="label">What I'm listening to</p>
+		<NowPlaying />
+	</div>
+</section>
+
 <Hobbies />
 
 <style>
@@ -80,6 +94,15 @@
 		line-height: 1.08;
 		color: var(--deep);
 		margin-bottom: 0.4rem;
+	}
+	.music {
+		padding-top: 5.5rem;
+	}
+	.np {
+		display: flex;
+		flex-direction: column;
+		gap: 0.9rem;
+		margin-top: 1.8rem;
 	}
 	.facts {
 		display: grid;
@@ -123,6 +146,14 @@
 		}
 		.portrait {
 			aspect-ratio: 16 / 10;
+		}
+	}
+	@media (max-width: 700px) {
+		.music {
+			padding-top: 3.6rem;
+		}
+		.np {
+			margin-top: 1.4rem;
 		}
 	}
 </style>

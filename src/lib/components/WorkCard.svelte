@@ -3,7 +3,7 @@
 	import Preview from '$lib/components/Preview.svelte';
 	import type { Project } from '$lib/projects';
 
-	let { project, pose = 'float' }: { project: Project; pose?: 'float' | 'low' | 'flat' } = $props();
+	let { project, pose = 'float' }: { project: Project; pose?: 'float' | 'low' | 'hero' } = $props();
 
 	let active = $state(false);
 </script>
@@ -25,9 +25,6 @@
 	</div>
 
 	<div class="txt">
-		<div class="chips">
-			{#each project.tags as t}<span class="chip">{t}</span>{/each}
-		</div>
 		<h3>{project.title}</h3>
 		<ul class="arrows">
 			{#each project.results ?? [] as r}<li>{r}</li>{/each}
@@ -65,16 +62,11 @@
 		padding: 0.2rem 0 0;
 		height: 100%;
 	}
-	.chips {
-		display: flex;
-		gap: 0.4rem;
-		flex-wrap: wrap;
-	}
 	h3 {
 		font-family: var(--serif);
 		font-size: clamp(1.7rem, 2.8vw, 2.3rem);
 		line-height: 1.05;
-		margin: 1rem 0 0.9rem;
+		margin: 0 0 1rem;
 	}
 	.card :global(ul.arrows li) {
 		transition: transform 0.45s var(--ease-out);

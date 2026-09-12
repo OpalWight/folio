@@ -20,9 +20,7 @@
 		<a href="/work" class="mono back">← All work</a>
 
 		<header class="head" use:reveal={{ delay: 80 }} data-stagger-group>
-			<div class="chips" data-stagger>
-				{#each p.tags as t}<span class="chip">{t}</span>{/each}
-			</div>
+			<p class="chip" data-stagger>{p.tags.join(' · ')}</p>
 			<h1 data-stagger>{p.title}</h1>
 			<p class="lede" data-stagger>{p.description}</p>
 		</header>
@@ -42,7 +40,7 @@
 		</dl>
 
 		<div class="cover" use:reveal={{ delay: 240, y: 24 }}>
-			<Laptop pose="flat">
+			<Laptop pose="hero">
 				{#snippet screen()}
 					<Preview project={p} mode="always" />
 				{/snippet}
@@ -100,11 +98,6 @@
 	}
 	.head {
 		max-width: 30ch;
-	}
-	.chips {
-		display: flex;
-		gap: 0.4rem;
-		flex-wrap: wrap;
 	}
 	h1 {
 		font-family: var(--serif);

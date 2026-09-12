@@ -197,9 +197,7 @@ img {
 	font-size: 0.62rem;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	color: var(--deep);
-	border: 1px solid var(--haze);
-	padding: 0.25rem 0.55rem;
+	color: var(--mid);
 }
 
 ul.arrows {
@@ -209,8 +207,7 @@ ul.arrows {
 }
 
 ul.arrows li {
-	padding: 0.55rem 0;
-	border-top: 1px solid var(--haze);
+	padding: 0.3rem 0;
 	display: grid;
 	grid-template-columns: 1.4rem 1fr;
 	gap: 0.6rem;
